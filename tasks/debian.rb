@@ -42,11 +42,11 @@ EOF
 
   # package up the installer into the distribution file
   #
-  exec "(cd #{DIST} ; tar -czvf #{BUNDLE} installer)"
+  exec "(cd #{DIST} ; tar -czvf ../installer.tar.gz installer)"
 end
 
 def upload_to_s3
-  exec "s3cp #{DIST}/#{BUNDLE} s3:#{BUNDLE}"
+  exec "s3cp installer.tar.gz s3:#{BUNDLE}"
 end
 
 def find_files prefix

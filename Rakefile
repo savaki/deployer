@@ -15,10 +15,31 @@ task :upload => :prepare do
 end
 
 desc "deploy project to hosts"
-task :deploy => :copy_to_s3 do 
+task :deploy  do 
+  raise "APP_ENV not set!"          unless APP_ENV          =~ /\S/
+  raise "AMI_SECURITY_KEY not set!" unless AMI_SECURITY_KEY =~ /\S/
+
+  IO.popen("hosts -env #{APP_ENV}") do |io|
+    io.each_line do |host|
+      next unless host =~ /\S/
+      host.gsub!(/\s/, "")
+
+      scp "installer.tar.gz", "ubuntu@#{host}:"
+      ssh host, "ifconfig -a"
+    end
+  end
 end
 
 desc "clean"
 task :clean do
   exec "rm -rf #{DIST}"
 end
+
+def scp source, target
+  exec "scp -i ~/.ssh/#{AMI_SECURITY_KEY}.pem -oStrictHostKeyChecking=no #{source} #{target}"
+end
+
+def ssh host, command
+  exec "ssh -i ~/.ssh/#{AMI_SECURITY_KEY}.pem -oStrictHostKeyChecking=no ubuntu@#{host} '#{command}'"
+end
+

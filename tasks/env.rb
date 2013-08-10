@@ -17,6 +17,9 @@ AWS_ACCESS_KEY_ID     = ENV["AWS_ACCESS_KEY_ID"]
 AWS_SECRET_ACCESS_KEY = ENV["AWS_SECRET_ACCESS_KEY"] 
 
 APP_NAME              = ENV["APP_NAME"]
+APP_ENV               = ENV["APP_ENV"]
+
+AMI_SECURITY_KEY      = env(APP_NAME, "AMI_SECURITY_KEY")
 
 VERSION               = env("SNAPSHOT-#{Time.now.to_i}", "GO_PIPELINE_C OUNTER")
 
